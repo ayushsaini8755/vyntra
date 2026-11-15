@@ -1,0 +1,32 @@
+<% include ./partials/header.ejs %>
+<div class="w-full min-h-screen bg-zinc-900 text-white py-5 flex flex-col">
+    <div class="w-full bg-zinc-900 flex flex-col py-10 gap-5">
+            <% user.stories.forEach(function(elem){ %>
+                <div class="flex flex-col gap-2 py-10">
+                    <div class="w-full h-auto flex flex-col gap-2" id="storyheight">
+                        <div class="story-progress">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <% if(elem.storyImage){ %> 
+                            <img src="/images/uploads/<%= elem.storyImage %>" class="w-full h-100 bg-sky-100 object-cover">
+                        <% } %>
+                    </div>
+                    <div class="flex justify-center" id="one">
+                        <h2 class="py-3 px-4 text-xl"><%= user.username %></h2>
+                        <h2 class="py-3 text-xl font-light text-zinc-400"><%= elem.description %></h2>
+                    </div>
+                    <hr>
+                </div>
+            <% }) %>
+    </div>
+</div>
+
+<script>
+    const progress = document.querySelectorAll(".progress-fill");
+    progress.forEach(function(bar){
+        bar.addEventListener("animationend", () => {
+            window.location.href = "/feed";
+        })
+    })
+</script>
+<% include ./partials/footer.ejs %>
