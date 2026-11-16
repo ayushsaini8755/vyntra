@@ -19,7 +19,7 @@
             .then(function(data){
                 clutter = "";
                 data.data.forEach(function(item){
-                    clutter += `<a href="${item.username}" class="outline-none">
+                    clutter += `<a href="/profile/${item.username}" class="outline-none">
             <div class="text-white flex items-center gap-2 mt-5">
                 <div class="image w-20 h-20 rounded-full bg-sky-100 overflow-hidden">
                     <img src="${item.profileImage}" alt="">
