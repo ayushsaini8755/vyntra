@@ -12,7 +12,7 @@
                 <i class="text-zinc-800 ri-pencil-fill border-zinc-900"></i>
             </span>
             <div class="w-50 h-50 bg-zinc-200 rounded-full overflow-hidden">
-                <img class="w-full h-full object-cover bg-sky-100" src="/images/uploads/<%= user.profileImage %>">
+                <img class="w-full h-full object-cover bg-sky-100" src="<%= user.profileImage %>">
             </div>
         </div>
         <div class="flex flex-col justify-between px-4">
@@ -27,7 +27,7 @@
             <% if(user.posts.length>0){ %>
             <% user.posts.reverse().forEach(function(elem){ %>
                 <div class="w-[32.5%] h-32 bg-sky-100">
-                    <img class="w-full h-full" src="/images/uploads/<%= elem.image %>">
+                    <img class="w-full h-full" src="<%= elem.image %>">
                 </div>
            <% }) %>
            <% }  else { %>

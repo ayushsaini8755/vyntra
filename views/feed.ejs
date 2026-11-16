@@ -18,7 +18,7 @@
         <% stories.forEach(function(item){ %>
           <a>
           <div id="show" class="w-[25vh] h-50 rounded-md flex flex-col items-center justify-center bg-gradient-to-r from-purple-700 to-orange-500 overflow-hidden">
-            <img class="bg-zinc-300 rounded-full w-30 h-30" src="/images/uploads/<%= item.storyImage %>">
+            <img class="bg-zinc-300 rounded-full w-30 h-30" src="<%= item.storyImage %>">
             <h1 class="mt-3">View Story</h1>
           </div>
           </a>
@@ -29,12 +29,12 @@
       <% posts.reverse().forEach(function(elem){ %> 
       <div class="flex flex-col">
         <div class="w-full items-center flex overflow-hidden px-2">
-          <img src="/images/uploads/<%= elem.user.profileImage %>" class="w-15 h-15 rounded-full bg-sky-100 border-1">
+          <img src="<%= elem.user.profileImage %>" class="w-15 h-15 rounded-full bg-sky-100 border-1">
           <h3 class="px-3 py-12"><%= elem.user.username %></h3>
         </div>
         <div class="w-full h-auto">
           <% if(elem.image){ %> 
-            <img src="/images/uploads/<%= elem.image %>" class="w-full h-220 bg-sky-100 object-cover" id="postheight">
+            <img src="<%= elem.image %>" class="w-full h-220 bg-sky-100 object-cover" id="postheight">
           <% } %>
           </div>
         <div class="options w-full px-4 flex items-center text-[1.4rem]">

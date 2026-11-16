@@ -7,6 +7,7 @@ const storyModel = require("./story");
 const app = require('../app');
 const localStrategy = require("passport-local");
 const upload = require('./multer');
+const { uploadToCloudinary } = require("../config/cloudinary");
 
 passport.use(new localStrategy(userModel.authenticate()));
 
@@ -75,16 +76,28 @@ router.get('/story', isLoggedIn, async function(req, res){
 });
 
 router.post('/story', isLoggedIn, upload.single("poststory"), async function(req, res){
-  let user = await userModel.findOne({username: req.session.passport.user});
-  let story = await storyModel.create({
-    storyImage: req.file?req.file.filename: null,
-    user: user._id,
-    description: req.body.description 
-  });
-  user.stories.push(story._id);
-  await user.save();
-  res.redirect('/feed');
-})
+  try {
+    let user = await userModel.findOne({username: req.session.passport.user});
+
+    let imageUrl = null;
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, "vyntra/stories");
+      imageUrl = result.secure_url;
+    }
+
+    let story = await storyModel.create({
+      storyImage: imageUrl,
+      user: user._id,
+      description: req.body.description
+    });
+    user.stories.push(story._id);
+    await user.save();
+    res.redirect('/feed');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Story upload failed");
+  }
+});
 
 router.get('/watch', isLoggedIn, async function(req, res){
   const tenMin = new Date(Date.now() - 10*60*1000);
@@ -112,23 +125,43 @@ router.get('/create',isLoggedIn, async function(req, res){
 });
 
 router.post('/create', isLoggedIn, upload.single("postimage"), async function(req, res){
-  let user = await userModel.findOne({username: req.session.passport.user});
-  let post = await postModel.create({
-    image: req.file?req.file.filename: null,
-    user: user._id,
-    caption: req.body.caption
-  });
-  user.posts.push(post._id);
-  await user.save();
-  res.redirect('/feed');
-})
+  try {
+    let user = await userModel.findOne({username: req.session.passport.user});
 
+    let imageUrl = null;
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, "vyntra/posts");
+      imageUrl = result.secure_url;
+    }
+
+    let post = await postModel.create({
+      image: imageUrl,
+      user: user._id,
+      caption: req.body.caption
+    });
+    user.posts.push(post._id);
+    await user.save();
+    res.redirect('/feed');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Post upload failed");
+  }
+});
 
 router.post('/fileupload', isLoggedIn, upload.single("image"), async function(req, res, next){
-  let user = await userModel.findOne({username: req.session.passport.user});
-  user.profileImage = req.file.filename;
-  await user.save();
-  res.redirect("/profile");
+  try {
+    let user = await userModel.findOne({username: req.session.passport.user});
+
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, "vyntra/profiles");
+      user.profileImage = result.secure_url;
+      await user.save();
+    }
+    res.redirect("/profile");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Profile image upload failed");
+  }
 });
 
 router.post('/delete/post/:id', isLoggedIn, async function(req, res){

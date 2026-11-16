@@ -11,6 +11,8 @@ const MongoStore = require("connect-mongo");
 var expressSession = require('express-session');
 const flash = require('connect-flash');
 
+require('dotenv').config();
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
